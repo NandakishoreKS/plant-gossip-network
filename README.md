@@ -81,16 +81,16 @@ For Hardware:
 
 ### Project Demo
 # Video
-[Add your demo video link here]
+https://1drv.ms/v/c/3770f730e1b4140c/EdpsLAg8bQRDqTfB9G8jTiwB8MALiP31evLNHKrgw9WCvA
 *Explain what the video demonstrates*
 
 # Additional Demos
 [Add any extra demo materials/links]
 
 ## Team Contributions
-- [Name 1]: [Specific contributions]
-- [Name 2]: [Specific contributions]
-- [Name 3]: [Specific contributions]
+- Nandakishore: designed the frontend
+- Jeff john: design the backend
+
 
 ---
 Made with ❤️ at TinkerHub Useless Projects 
