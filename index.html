@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Gossip Network</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/lucide@latest/dist/css/lucide.css" rel="stylesheet">
+    <style>
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+        .animate-bounce {
+            animation: bounce 1s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50">
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-sm border-b border-green-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-green-100 rounded-lg">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Plant Gossip Network</h1>
+                        <div class="flex items-center gap-2 text-sm text-gray-600">
+                            <div class="flex items-center gap-1">
+                                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                <span id="online-users">6 plants online</span>
+                            </div>
+                            <span>•</span>
+                            <span>Live conversations</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-2" id="tab-buttons">
+                    <!-- Tab buttons will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Garden View -->
+        <div id="garden-view" class="space-y-6">
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Garden Visualization -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="p-4 bg-gradient-to-r from-green-500 to-blue-500 text-white">
+                            <h2 class="text-xl font-semibold">Interactive Garden Map</h2>
+                            <p class="text-green-100">Click plants to see their status and join conversations</p>
+                        </div>
+                        <div id="garden-map" class="p-6 h-96 relative bg-gradient-to-br from-green-100 via-green-50 to-blue-100">
+                            <!-- Plants will be inserted here by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Quick Chat -->
+                    <div class="bg-white rounded-xl shadow-lg p-6 mt-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Join the Conversation</h3>
+                        <div id="selected-plant-chat" class="space-y-4">
+                            <!-- Selected plant chat will be inserted here by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selected Plant Details & Live Feed -->
+                <div class="space-y-4">
+                    <div id="selected-plant-details">
+                        <!-- Selected plant details will be inserted here by JavaScript -->
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <h4 class="font-medium text-gray-700 mb-3 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                            Recent Activity
+                        </h4>
+                        <div id="recent-activity" class="space-y-2 max-h-32 overflow-y-auto">
+                            <!-- Recent activity will be inserted here by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Plant Profiles View -->
+        <div id="plants-view" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+            <!-- Plant profiles will be inserted here by JavaScript -->
+        </div>
+
+        <!-- Live Chat View -->
+        <div id="chat-view" class="max-w-4xl mx-auto hidden">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="p-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-xl font-semibold">Live Garden Chat</h2>
+                            <p class="text-blue-100">Real-time plant conversations and gossip</p>
+                        </div>
+                        <div class="flex items-center gap-2 text-blue-100">
+                            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            <span class="text-sm" id="chat-online-users">6 online</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6">
+                    <!-- Typing indicator -->
+                    <div id="typing-indicator" class="mb-4 flex items-center gap-2 text-sm text-gray-500 hidden">
+                        <div class="flex space-x-1">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        </div>
+                        <span id="typing-text">Rosa is typing...</span>
+                    </div>
+
+                    <div id="chat-messages" class="space-y-4 max-h-96 overflow-y-auto mb-6">
+                        <!-- Chat messages will be inserted here by JavaScript -->
+                    </div>
+
+                    <!-- Chat Stats -->
+                    <div class="border-t pt-4 mb-4">
+                        <div class="grid grid-cols-4 gap-4 text-center">
+                            <div class="p-3 bg-green-50 rounded-lg">
+                                <div class="text-lg font-bold text-green-600" id="online-now">6</div>
+                                <div class="text-xs text-gray-600">Online Now</div>
+                            </div>
+                            <div class="p-3 bg-blue-50 rounded-lg">
+                                <div class="text-lg font-bold text-blue-600" id="total-messages">0</div>
+                                <div class="text-xs text-gray-600">Messages</div>
+                            </div>
+                            <div class="p-3 bg-purple-50 rounded-lg">
+                                <div class="text-lg font-bold text-purple-600" id="plant-gossip">0</div>
+                                <div class="text-xs text-gray-600">Plant Gossip</div>
+                            </div>
+                            <div class="p-3 bg-red-50 rounded-lg">
+                                <div class="text-lg font-bold text-red-600" id="total-likes">0</div>
+                                <div class="text-xs text-gray-600">Total Likes</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="border-t pt-4">
+                        <h3 class="font-medium text-gray-700 mb-3">Quick Actions</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <button id="join-conversation-btn" class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full hover:bg-green-200 transition-colors">
+                                💬 Join Conversation
+                            </button>
+                            <button id="view-profiles-btn" class="px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-full hover:bg-blue-200 transition-colors">
+                                🌱 View Plant Profiles
+                            </button>
+                            <button id="clear-chat-btn" class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-gray-200 transition-colors">
+                                🗑️ Clear Chat History
+                            </button>
+                            <button id="refresh-garden-btn" class="px-3 py-1 bg-yellow-100 text-yellow-700 text-sm rounded-full hover:bg-yellow-200 transition-colors">
+                                🔄 Refresh Garden
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Plant data
+        const plantDatabase = [
+            {
+                id: 1,
+                name: 'Rosa',
+                type: 'Rose',
+                icon: 'flower',
+                color: 'text-pink-500',
+                bgColor: 'bg-pink-100',
+                borderColor: 'border-pink-300',
+                location: 'Front Garden Bed',
+                habitat: 'Well-drained soil, full sunlight',
+                waterNeeds: 'Moderate - 2-3 times per week',
+                sunlight: 'Full sun (6-8 hours daily)',
+                season: 'Blooms spring through fall',
+                personality: 'Elegant and dramatic',
+                specialNeeds: 'Regular pruning, aphid watch',
+                relationships: ['Sunny', 'Basilio'],
+                gossipStyle: 'dramatic'
+            },
+            {
+                id: 2,
+                name: 'Oakley',
+                type: 'Oak Tree',
+                icon: 'treePine',
+                color: 'text-green-700',
+                bgColor: 'bg-green-100',
+                borderColor: 'border-green-300',
+                location: 'Backyard Corner',
+                habitat: 'Deep soil, plenty of space',
+                waterNeeds: 'Low - rain dependent',
+                sunlight: 'Full to partial sun',
+                season: 'Deciduous - colorful fall leaves',
+                personality: 'Wise and protective',
+                specialNeeds: 'Acorn cleanup, branch monitoring',
+                relationships: ['Fernanda', 'Minty', 'Rosa'],
+                gossipStyle: 'wise'
+            },
+            {
+                id: 3,
+                name: 'Basilio',
+                type: 'Basil',
+                icon: 'leaf',
+                color: 'text-green-500',
+                bgColor: 'bg-green-50',
+                borderColor: 'border-green-200',
+                location: 'Kitchen Herb Garden',
+                habitat: 'Rich, moist soil',
+                waterNeeds: 'High - daily watering',
+                sunlight: 'Full sun preferred',
+                season: 'Annual - harvest before frost',
+                personality: 'Aromatic and helpful',
+                specialNeeds: 'Pinch flowers, regular harvesting',
+                relationships: ['Minty', 'Rosa', 'Sunny'],
+                gossipStyle: 'helpful'
+            },
+            {
+                id: 4,
+                name: 'Sunny',
+                type: 'Sunflower',
+                icon: 'flower',
+                color: 'text-yellow-500',
+                bgColor: 'bg-yellow-100',
+                borderColor: 'border-yellow-300',
+                location: 'South-facing Wall',
+                habitat: 'Any well-drained soil',
+                waterNeeds: 'Moderate - drought tolerant',
+                sunlight: 'Full sun essential',
+                season: 'Summer bloomer',
+                personality: 'Cheerful and optimistic',
+                specialNeeds: 'Support for tall stems',
+                relationships: ['Rosa', 'Basilio', 'Fernanda'],
+                gossipStyle: 'cheerful'
+            },
+            {
+                id: 5,
+                name: 'Fernanda',
+                type: 'Fern',
+                icon: 'sprout',
+                color: 'text-emerald-500',
+                bgColor: 'bg-emerald-100',
+                borderColor: 'border-emerald-300',
+                location: 'Shaded Patio',
+                habitat: 'Humid, shaded areas',
+                waterNeeds: 'High - keep soil moist',
+                sunlight: 'Shade to partial shade',
+                season: 'Evergreen - year round',
+                personality: 'Mysterious and ancient',
+                specialNeeds: 'High humidity, indirect light',
+                relationships: ['Oakley', 'Minty', 'Sunny'],
+                gossipStyle: 'mysterious'
+            },
+            {
+                id: 6,
+                name: 'Minty',
+                type: 'Mint',
+                icon: 'leaf',
+                color: 'text-teal-500',
+                bgColor: 'bg-teal-100',
+                borderColor: 'border-teal-300',
+                location: 'Contained Herb Pot',
+                habitat: 'Moist soil, spreads rapidly',
+                waterNeeds: 'High - loves water',
+                sunlight: 'Partial sun to shade',
+                season: 'Perennial - harvest regularly',
+                personality: 'Energetic and invasive',
+                specialNeeds: 'Container planting, regular trimming',
+                relationships: ['Basilio', 'Fernanda', 'Oakley'],
+                gossipStyle: 'energetic'
+            }
+        ];
+
+        const moods = ['happy', 'excited', 'content', 'chatty', 'sleepy', 'thirsty', 'sunny', 'gossipy'];
+
+        // Enhanced gossip templates with plant-to-plant interactions
+        const gossipTemplates = [
+            {
+                template: "Have you seen how {target} has been showing off lately? Their {trait} is getting out of hand!",
+                style: 'dramatic',
+                traits: ['blooms', 'leaves', 'growth', 'fragrance', 'height']
+            },
+            {
+                template: "I heard {target} complaining about the watering schedule again. Some plants are never satisfied!",
+                style: 'gossipy',
+                traits: []
+            },
+            {
+                template: "{target} and I had the most delightful conversation about the morning dew yesterday.",
+                style: 'cheerful',
+                traits: []
+            },
+            {
+                template: "Between you and me, I think {target} has been getting extra fertilizer. Look how vibrant they are!",
+                style: 'mysterious',
+                traits: []
+            },
+            {
+                template: "I'm a bit worried about {target}. They seem to be drooping more than usual lately.",
+                style: 'helpful',
+                traits: []
+            },
+            {
+                template: "Did you know {target} attracts the most beautiful butterflies? I'm quite envious actually.",
+                style: 'wise',
+                traits: []
+            },
+            {
+                template: "{target} told me they're planning to spread their roots closer to the fountain. Bold move!",
+                style: 'energetic',
+                traits: []
+            },
+            {
+                template: "The gardener's been playing that classical music again. I think it's helping everyone grow!",
+                style: 'any',
+                traits: []
+            },
+            {
+                template: "Those new wind chimes are absolutely lovely, don't you think?",
+                style: 'any',
+                traits: []
+            },
+            {
+                template: "I spotted a family of ladybugs setting up home near the compost. How exciting!",
+                style: 'any',
+                traits: []
+            }
+        ];
+
+        // Plant reactions to gossip
+        const reactions = [
+            "Oh my! Really?",
+            "I had no idea!",
+            "That's fascinating!",
+            "How interesting...",
+            "I've noticed that too!",
+            "Well, I never!",
+            "That explains a lot!",
+            "Goodness gracious!",
+            "How delightful!",
+            "Oh dear...",
+            "That's wonderful news!",
+            "I'm not surprised!"
+        ];
+
+        // App state
+        let state = {
+            plants: [],
+            gossipMessages: [],
+            selectedPlant: null,
+            newGossip: '',
+            activeTab: 'garden',
+            isTyping: null,
+            onlineUsers: 6
+        };
+
+        // DOM elements
+        const elements = {
+            tabButtons: document.getElementById('tab-buttons'),
+            gardenView: document.getElementById('garden-view'),
+            plantsView: document.getElementById('plants-view'),
+            chatView: document.getElementById('chat-view'),
+            gardenMap: document.getElementById('garden-map'),
+            selectedPlantChat: document.getElementById('selected-plant-chat'),
+            selectedPlantDetails: document.getElementById('selected-plant-details'),
+            recentActivity: document.getElementById('recent-activity'),
+            chatMessages: document.getElementById('chat-messages'),
+            typingIndicator: document.getElementById('typing-indicator'),
+            typingText: document.getElementById('typing-text'),
+            onlineUsers: document.getElementById('online-users'),
+            chatOnlineUsers: document.getElementById('chat-online-users'),
+            onlineNow: document.getElementById('online-now'),
+            totalMessages: document.getElementById('total-messages'),
+            plantGossip: document.getElementById('plant-gossip'),
+            totalLikes: document.getElementById('total-likes'),
+            joinConversationBtn: document.getElementById('join-conversation-btn'),
+            viewProfilesBtn: document.getElementById('view-profiles-btn'),
+            clearChatBtn: document.getElementById('clear-chat-btn'),
+            refreshGardenBtn: document.getElementById('refresh-garden-btn')
+        };
+
+        // Initialize the app
+        function init() {
+            // Initialize plants
+            state.plants = plantDatabase.map(plant => ({
+                ...plant,
+                mood: moods[Math.floor(Math.random() * moods.length)],
+                gossipCount: Math.floor(Math.random() * 3),
+                lastActive: getCurrentTime(),
+                healthStatus: 'healthy',
+                isOnline: true,
+                position: {
+                    x: Math.random() * 70 + 10,
+                    y: Math.random() * 60 + 20
+                }
+            }));
+
+            state.selectedPlant = state.plants[0];
+
+            // Set up event listeners
+            setupEventListeners();
+
+            // Start gossip conversations
+            setInterval(() => {
+                generatePlantToPlantGossip();
+            }, 5000);
+
+            // Simulate plant reactions
+            setInterval(() => {
+                if (Math.random() < 0.3) {
+                    generatePlantReaction();
+                }
+            }, 8000);
+
+            // Update online status randomly
+            setInterval(() => {
+                updatePlantStatus();
+            }, 15000);
+
+            // Initial render
+            render();
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Tab buttons
+            elements.tabButtons.innerHTML = `
+                <button id="garden-tab" class="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all bg-green-500 text-white shadow-md">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17l-4 4m0 0l-4-4m4 4V3"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l-3-3m0 0l-3 3m3-3v13"></path>
+                    </svg>
+                    Garden
+                </button>
+                <button id="plants-tab" class="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all bg-white text-gray-600 hover:bg-green-50 hover:text-green-600">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l-4-4m4 4l4-4m-4 4V3"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2"></path>
+                    </svg>
+                    Plant Profiles
+                </button>
+                <button id="chat-tab" class="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all bg-white text-gray-600 hover:bg-green-50 hover:text-green-600">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                    Live Chat
+                </button>
+            `;
+
+            document.getElementById('garden-tab').addEventListener('click', () => {
+                state.activeTab = 'garden';
+                render();
+            });
+
+            document.getElementById('plants-tab').addEventListener('click', () => {
+                state.activeTab = 'plants';
+                render();
+            });
+
+            document.getElementById('chat-tab').addEventListener('click', () => {
+                state.activeTab = 'chat';
+                render();
+            });
+
+            // Quick actions
+            elements.joinConversationBtn.addEventListener('click', () => {
+                state.activeTab = 'garden';
+                render();
+            });
+
+            elements.viewProfilesBtn.addEventListener('click', () => {
+                state.activeTab = 'plants';
+                render();
+            });
+
+            elements.clearChatBtn.addEventListener('click', () => {
+                state.gossipMessages = [];
+                render();
+            });
+
+            elements.refreshGardenBtn.addEventListener('click', () => {
+                window.location.reload();
+            });
+        }
+
+        // Main render function
+        function render() {
+            // Show/hide views based on active tab
+            elements.gardenView.classList.toggle('hidden', state.activeTab !== 'garden');
+            elements.plantsView.classList.toggle('hidden', state.activeTab !== 'plants');
+            elements.chatView.classList.toggle('hidden', state.activeTab !== 'chat');
+
+            // Update tab button styles
+            document.getElementById('garden-tab').className = `flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                state.activeTab === 'garden' ? 'bg-green-500 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-green-50 hover:text-green-600'
+            }`;
+
+            document.getElementById('plants-tab').className = `flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                state.activeTab === 'plants' ? 'bg-green-500 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-green-50 hover:text-green-600'
+            }`;
+
+            document.getElementById('chat-tab').className = `flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                state.activeTab === 'chat' ? 'bg-green-500 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-green-50 hover:text-green-600'
+            }`;
+
+            // Render the appropriate view
+            if (state.activeTab === 'garden') {
+                renderGardenView();
+            } else if (state.activeTab === 'plants') {
+                renderPlantsView();
+            } else if (state.activeTab === 'chat') {
+                renderChatView();
+            }
+
+            // Update online users display
+            elements.onlineUsers.textContent = `${state.onlineUsers} plants online`;
+            elements.chatOnlineUsers.textContent = `${state.onlineUsers} online`;
+            elements.onlineNow.textContent = state.plants.filter(p => p.isOnline).length;
+            elements.totalMessages.textContent = state.gossipMessages.length;
+            elements.plantGossip.textContent = state.gossipMessages.filter(m => m.isAboutOtherPlant).length;
+            elements.totalLikes.textContent = state.gossipMessages.reduce((sum, msg) => sum + msg.likes, 0);
+        }
+
+        // Render garden view
+        function renderGardenView() {
+            // Render garden map with plants
+            elements.gardenMap.innerHTML = '';
+            state.plants.forEach(plant => {
+                const plantElement = document.createElement('div');
+                plantElement.className = `absolute cursor-pointer group`;
+                plantElement.style.left = `${plant.position.x}%`;
+                plantElement.style.top = `${plant.position.y}%`;
+                plantElement.onclick = () => {
+                    state.selectedPlant = plant;
+                    renderGardenView();
+                };
+
+                const icon = getPlantIcon(plant.icon, plant.color);
+
+                plantElement.innerHTML = `
+                    <div class="relative p-3 rounded-full ${plant.bgColor} ${
+                        state.selectedPlant?.id === plant.id ? 'ring-4 ring-blue-400 scale-110' : ''
+                    } shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                        ${icon}
+                        <div class="absolute -top-1 -left-1 w-3 h-3 rounded-full ${
+                            plant.isOnline ? 'bg-green-400' : 'bg-gray-400'
+                        } border-2 border-white"></div>
+                        <div class="absolute -top-1 -right-1 text-lg">
+                            ${getMoodEmoji(plant.mood)}
+                        </div>
+                        ${plant.gossipCount > 0 ? `
+                        <div class="absolute -bottom-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                            ${plant.gossipCount}
+                        </div>` : ''}
+                        ${state.isTyping === plant.name ? `
+                        <div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
+                            <div class="bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap animate-pulse">
+                                typing...
+                            </div>
+                        </div>` : ''}
+                    </div>
+                    <div class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="bg-black text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+                            ${plant.name} - ${plant.mood} ${plant.isOnline ? '(online)' : '(away)'}
+                        </div>
+                    </div>
+                `;
+
+                elements.gardenMap.appendChild(plantElement);
+            });
+
+            // Render selected plant chat
+            if (state.selectedPlant) {
+                elements.selectedPlantChat.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                            <div class="p-2 rounded-full ${state.selectedPlant.bgColor} relative">
+                                ${getPlantIcon(state.selectedPlant.icon, state.selectedPlant.color)}
+                                <div class="absolute -top-1 -left-1 w-3 h-3 rounded-full ${
+                                    state.selectedPlant.isOnline ? 'bg-green-400' : 'bg-gray-400'
+                                } border-2 border-white"></div>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">${state.selectedPlant.name}</span>
+                                <span class="ml-2 text-sm text-gray-500">
+                                    ${getMoodEmoji(state.selectedPlant.mood)} ${state.selectedPlant.mood}
+                                </span>
+                                <span class="ml-2 text-xs text-gray-400">
+                                    ${state.selectedPlant.isOnline ? 'online' : 'away'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <input
+                                type="text"
+                                id="new-gossip-input"
+                                value="${state.newGossip}"
+                                placeholder="Share what ${state.selectedPlant.name} is thinking..."
+                                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                                onkeypress="if(event.key === 'Enter') document.getElementById('send-gossip-btn').click()"
+                            />
+                            <button
+                                id="send-gossip-btn"
+                                class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                ${!state.newGossip.trim() ? 'disabled' : ''}
+                            >
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('new-gossip-input').addEventListener('input', (e) => {
+                    state.newGossip = e.target.value;
+                });
+
+                document.getElementById('send-gossip-btn').addEventListener('click', shareGossip);
+            } else {
+                elements.selectedPlantChat.innerHTML = `
+                    <p class="text-gray-500 text-center py-4">Select a plant from the garden to join their conversation!</p>
+                `;
+            }
+
+            // Render selected plant details
+            if (state.selectedPlant) {
+                const plant = state.selectedPlant;
+                const icon = getPlantIcon(plant.icon, plant.color);
+
+                elements.selectedPlantDetails.innerHTML = `
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden border-2 ${plant.borderColor}">
+                        <div class="p-4 ${plant.bgColor}">
+                            <div class="flex items-center gap-3">
+                                <div class="relative">
+                                    ${icon}
+                                    <div class="absolute -top-1 -left-1 w-3 h-3 rounded-full ${
+                                        plant.isOnline ? 'bg-green-400' : 'bg-gray-400'
+                                    } border-2 border-white"></div>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-800">${plant.name}</h3>
+                                    <p class="text-gray-600">${plant.type}</p>
+                                </div>
+                                <div class="ml-auto text-2xl">
+                                    ${getMoodEmoji(plant.mood)}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 space-y-3">
+                            <div class="flex items-start gap-2">
+                                <svg class="w-4 h-4 text-blue-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-700">Location</p>
+                                    <p class="text-sm text-gray-600">${plant.location}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <svg class="w-4 h-4 text-purple-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                </svg>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-700">Often chats with</p>
+                                    <p class="text-sm text-gray-600">${plant.relationships.join(', ')}</p>
+                                </div>
+                            </div>
+                            <div class="pt-2 border-t">
+                                <p class="text-sm font-medium text-gray-700 mb-1">Current Status</p>
+                                <div class="flex items-center gap-2 text-sm text-gray-600">
+                                    <span class="w-2 h-2 rounded-full ${
+                                        plant.isOnline ? 'bg-green-400' : 'bg-gray-400'
+                                    }"></span>
+                                    <span>${plant.isOnline ? 'Active in chat' : 'Away'}</span>
+                                    <span>• ${plant.mood}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                elements.selectedPlantDetails.innerHTML = '';
+            }
+
+            // Render recent activity
+            elements.recentActivity.innerHTML = '';
+            const recentMessages = state.gossipMessages.slice(0, 4);
+            if (recentMessages.length > 0) {
+                recentMessages.forEach(msg => {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = "text-xs text-gray-600 p-2 bg-gray-50 rounded";
+                    messageElement.innerHTML = `
+                        <span class="font-medium">${msg.plantName}</span>: ${msg.message.slice(0, 50)}...
+                    `;
+                    elements.recentActivity.appendChild(messageElement);
+                });
+            } else {
+                elements.recentActivity.innerHTML = '<p class="text-xs text-gray-500 p-2">No recent activity yet...</p>';
+            }
+        }
+
+        // Render plants view
+        function renderPlantsView() {
+            elements.plantsView.innerHTML = '';
+            state.plants.forEach(plant => {
+                const icon = getPlantIcon(plant.icon, plant.color);
+
+                const plantElement = document.createElement('div');
+                plantElement.className = `bg-white rounded-xl shadow-lg overflow-hidden border-2 ${plant.borderColor} hover:shadow-xl transition-shadow`;
+                plantElement.innerHTML = `
+                    <div class="p-4 ${plant.bgColor}">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <div class="relative">
+                                    ${icon}
+                                    <div class="absolute -top-1 -left-1 w-2 h-2 rounded-full ${
+                                        plant.isOnline ? 'bg-green-400' : 'bg-gray-400'
+                                    } border border-white"></div>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-800">${plant.name}</h3>
+                            </div>
+                            <div class="text-xl">${getMoodEmoji(plant.mood)}</div>
+                        </div>
+                        <p class="text-sm text-gray-600">${plant.type} • ${plant.mood}</p>
+                    </div>
+                    <div class="p-4 space-y-3">
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-2">Social Circle</h4>
+                            <div class="flex flex-wrap gap-1">
+                                ${plant.relationships.map(friend => `
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                                        ${friend}
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-2">Habitat & Care</h4>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    <span class="text-gray-600">${plant.location}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-3 h-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                    </svg>
+                                    <span class="text-gray-600">${plant.waterNeeds}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-3 h-3 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                    </svg>
+                                    <span class="text-gray-600">${plant.sunlight}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-1">Growing Details</h4>
+                            <p class="text-sm text-gray-600">${plant.habitat}</p>
+                            <p class="text-sm text-gray-600 mt-1">${plant.season}</p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-1">Special Care</h4>
+                            <p class="text-sm text-gray-600">${plant.specialNeeds}</p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-1">Personality</h4>
+                            <p class="text-sm text-gray-600 italic">"${plant.personality}"</p>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-gray-500">Messages: ${plant.gossipCount}</span>
+                                <span class="w-2 h-2 rounded-full ${
+                                    plant.isOnline ? 'bg-green-400' : 'bg-gray-400'
+                                }"></span>
+                            </div>
+                            <button
+                                onclick="selectPlantAndSwitchTab(${plant.id}, 'garden')"
+                                class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded hover:bg-green-200 transition-colors"
+                            >
+                                Chat with ${plant.name}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                elements.plantsView.appendChild(plantElement);
+            });
+        }
+
+        // Render chat view
+        function renderChatView() {
+            // Render chat messages
+            elements.chatMessages.innerHTML = '';
+            if (state.gossipMessages.length === 0) {
+                elements.chatMessages.innerHTML = `
+                    <div class="text-center py-12">
+                        <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        <p class="text-gray-500">No messages yet... plants are being quiet!</p>
+                        <p class="text-sm text-gray-400 mt-2">Wait a moment for the conversation to start, or go to Garden tab to share something</p>
+                    </div>
+                `;
+            } else {
+                state.gossipMessages.forEach(message => {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = `flex gap-3 p-4 rounded-lg transition-colors ${
+                        message.messageType === 'reaction' ? 'bg-blue-50 border-l-4 border-blue-200' :
+                        message.isUserMessage ? 'bg-green-50 border-l-4 border-green-200' :
+                        message.isAboutOtherPlant ? 'bg-yellow-50 border-l-4 border-yellow-200' :
+                        'bg-gray-50'
+                    }`;
+
+                    const icon = getMessageTypeIcon(message.messageType);
+
+                    messageElement.innerHTML = `
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white font-medium relative">
+                                ${message.plantName.charAt(0)}
+                                <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="font-medium text-gray-900">${message.plantName}</span>
+                                <span class="text-xs text-gray-500">(${message.plantType})</span>
+                                <span class="text-sm">${icon}</span>
+                                ${message.replyTo ? `
+                                <span class="text-xs text-blue-600">replying to ${message.replyTo}</span>
+                                ` : ''}
+                                <span class="text-xs text-gray-400 ml-auto">${message.timestamp}</span>
+                            </div>
+                            <p class="text-gray-700 mb-2 ${
+                                message.messageType === 'reaction' ? 'font-medium text-blue-700' :
+                                message.isAboutOtherPlant ? 'font-medium' : ''
+                            }">
+                                ${message.message}
+                            </p>
+                            <button
+                                onclick="likeGossip(${message.id})"
+                                class="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
+                            >
+                                <svg class="w-4 h-4 ${message.likes > 0 ? 'fill-current text-red-500' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                </svg>
+                                ${message.likes} ${message.likes === 1 ? 'like' : 'likes'}
+                            </button>
+                        </div>
+                    `;
+
+                    elements.chatMessages.appendChild(messageElement);
+                });
+            }
+
+            // Show/hide typing indicator
+            elements.typingIndicator.classList.toggle('hidden', !state.isTyping);
+            if (state.isTyping) {
+                elements.typingText.textContent = `${state.isTyping} is typing...`;
+            }
+
+            // Scroll to bottom of chat
+            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+        }
+
+        // Helper function to get plant icon SVG
+        function getPlantIcon(iconName, colorClass) {
+            switch (iconName) {
+                case 'flower':
+                    return `<svg class="w-6 h-6 ${colorClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>`;
+                case 'treePine':
+                    return `<svg class="w-6 h-6 ${colorClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 17l-4 4m0 0l-4-4m4 4V3"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l-3-3m0 0l-3 3m3-3v13"></path>
+                    </svg>`;
+                case 'leaf':
+                    return `<svg class="w-6 h-6 ${colorClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                    </svg>`;
+                case 'sprout':
+                    return `<svg class="w-6 h-6 ${colorClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l7 2 4-4M18 11l4 4m-8 0v-4m0 0l-4-4m4 4H8m-4 4v4m0-4H4m4 0h4"></path>
+                    </svg>`;
+                default:
+                    return `<svg class="w-6 h-6 ${colorClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>`;
+            }
+        }
+
+        // Helper function to get mood emoji
+        function getMoodEmoji(mood) {
+            const moodMap = {
+                happy: '😊',
+                excited: '🤩',
+                content: '😌',
+                chatty: '💬',
+                sleepy: '😴',
+                thirsty: '💧',
+                sunny: '☀️',
+                gossipy: '🗣️'
+            };
+            return moodMap[mood] || '🌱';
+        }
+
+        // Helper function to get message type icon
+        function getMessageTypeIcon(messageType) {
+            switch (messageType) {
+                case 'reaction': return '💭';
+                case 'gossip': return '🗣️';
+                case 'user': return '👤';
+                default: return '💬';
+            }
+        }
+
+        // Helper function to get current time
+        function getCurrentTime() {
+            return new Date().toLocaleTimeString();
+        }
+
+        // Generate plant to plant gossip
+        function generatePlantToPlantGossip() {
+            const gossiper = state.plants[Math.floor(Math.random() * state.plants.length)];
+
+            // Show typing indicator
+            state.isTyping = gossiper.name;
+            render();
+
+            setTimeout(() => {
+                state.isTyping = null;
+
+                // Choose gossip style based on plant personality
+                const availableTemplates = gossipTemplates.filter(
+                    t => t.style === gossiper.gossipStyle || t.style === 'any'
+                );
+
+                const template = availableTemplates[Math.floor(Math.random() * availableTemplates.length)];
+                let message = template.template;
+
+                // If template mentions another plant, choose a target
+                if (message.includes('{target}')) {
+                    const possibleTargets = gossiper.relationships.length > 0
+                        ? gossiper.relationships
+                        : state.plants.filter(p => p.id !== gossiper.id).map(p => p.name);
+
+                    const target = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
+                    message = message.replace('{target}', target);
+
+                    if (message.includes('{trait}') && template.traits.length > 0) {
+                        const trait = template.traits[Math.floor(Math.random() * template.traits.length)];
+                        message = message.replace('{trait}', trait);
+                    }
+                }
+
+                const newMessage = {
+                    id: Date.now(),
+                    plantId: gossiper.id,
+                    plantName: gossiper.name,
+                    plantType: gossiper.type,
+                    message: message,
+                    timestamp: getCurrentTime(),
+                    likes: 0,
+                    color: gossiper.color,
+                    messageType: 'gossip',
+                    isAboutOtherPlant: message.includes('Rosa') || message.includes('Oakley') ||
+                                    message.includes('Basilio') || message.includes('Sunny') ||
+                                    message.includes('Fernanda') || message.includes('Minty')
+                };
+
+                state.gossipMessages = [newMessage, ...state.gossipMessages.slice(0, 49)];
+
+                // Update plant status
+                state.plants = state.plants.map(plant =>
+                    plant.id === gossiper.id
+                        ? {
+                            ...plant,
+                            gossipCount: plant.gossipCount + 1,
+                            mood: 'chatty',
+                            lastActive: getCurrentTime()
+                        }
+                        : plant
+                );
+
+                // Reset mood after delay
+                setTimeout(() => {
+                    state.plants = state.plants.map(plant =>
+                        plant.id === gossiper.id
+                            ? { ...plant, mood: moods[Math.floor(Math.random() * moods.length)] }
+                            : plant
+                    );
+                    render();
+                }, 4000);
+
+                render();
+            }, 1500 + Math.random() * 2000); // Simulate typing time
+        }
+
+        // Generate plant reaction
+        function generatePlantReaction() {
+            if (state.gossipMessages.length === 0) return;
+
+            const reactor = state.plants[Math.floor(Math.random() * state.plants.length)];
+            const recentMessage = state.gossipMessages[Math.floor(Math.random() * Math.min(3, state.gossipMessages.length))];
+
+            // Don't react to own messages
+            if (recentMessage.plantId === reactor.id) return;
+
+            const reaction = reactions[Math.floor(Math.random() * reactions.length)];
+
+            const reactionMessage = {
+                id: Date.now(),
+                plantId: reactor.id,
+                plantName: reactor.name,
+                plantType: reactor.type,
+                message: reaction,
+                timestamp: getCurrentTime(),
+                likes: 0,
+                color: reactor.color,
+                messageType: 'reaction',
+                replyTo: recentMessage.plantName
+            };
+
+            state.gossipMessages = [reactionMessage, ...state.gossipMessages.slice(0, 49)];
+
+            state.plants = state.plants.map(plant =>
+                plant.id === reactor.id
+                    ? {
+                        ...plant,
+                        gossipCount: plant.gossipCount + 1,
+                        lastActive: getCurrentTime()
+                    }
+                    : plant
+            );
+
+            render();
+        }
+
+        // Update plant status
+        function updatePlantStatus() {
+            state.plants = state.plants.map(plant => ({
+                ...plant,
+                isOnline: Math.random() > 0.1, // 90% chance to stay online
+                mood: Math.random() > 0.7 ? moods[Math.floor(Math.random() * moods.length)] : plant.mood
+            }));
+
+            state.onlineUsers = Math.floor(Math.random() * 2) + 5; // 5-6 users online
+            render();
+        }
+
+        // Share gossip from user
+        function shareGossip() {
+            if (!state.selectedPlant || !state.newGossip.trim()) return;
+
+            const message = {
+                id: Date.now(),
+                plantId: state.selectedPlant.id,
+                plantName: state.selectedPlant.name,
+                plantType: state.selectedPlant.type,
+                message: state.newGossip,
+                timestamp: getCurrentTime(),
+                likes: 0,
+                color: state.selectedPlant.color,
+                messageType: 'user',
+                isUserMessage: true
+            };
+
+            state.gossipMessages = [message, ...state.gossipMessages.slice(0, 49)];
+
+            state.plants = state.plants.map(plant =>
+                plant.id === state.selectedPlant.id
+                    ? {
+                        ...plant,
+                        gossipCount: plant.gossipCount + 1,
+                        mood: 'excited',
+                        lastActive: getCurrentTime()
+                    }
+                    : plant
+            );
+
+            state.newGossip = '';
+            render();
+        }
+
+        // Like gossip message
+        function likeGossip(messageId) {
+            state.gossipMessages = state.gossipMessages.map(msg =>
+                msg.id === messageId ? { ...msg, likes: msg.likes + 1 } : msg
+            );
+            render();
+        }
+
+        // Select plant and switch tab
+        function selectPlantAndSwitchTab(plantId, tab) {
+            const plant = state.plants.find(p => p.id === plantId);
+            if (plant) {
+                state.selectedPlant = plant;
+                state.activeTab = tab;
+                render();
+            }
+        }
+
+        // Make functions available globally for HTML event handlers
+        window.shareGossip = shareGossip;
+        window.likeGossip = likeGossip;
+        window.selectPlantAndSwitchTab = selectPlantAndSwitchTab;
+
+        // Initialize the app when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
